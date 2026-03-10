@@ -1,8 +1,10 @@
 # DriftGuard Agent
 
+> Maintenance mode: preserved as a public reference for data drift monitoring ideas and implementation patterns.
+
 **Automated data quality & drift detection.** Watches incoming data streams, detects anomalies, unexpected spikes, missing values, and schema drift. Ideal for marketplaces, analytics dashboards, financial data, and event pipelines.
 
-[![CI](https://github.com/driftguard/agent/actions/workflows/ci.yaml/badge.svg)](https://github.com/driftguard/agent/actions/workflows/ci.yaml)
+[![CI](https://github.com/kiku-jw/DriftGuard/actions/workflows/ci.yaml/badge.svg)](https://github.com/kiku-jw/DriftGuard/actions/workflows/ci.yaml)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![License: AGPL-3.0](https://img.shields.io/badge/License-AGPL--3.0-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
 

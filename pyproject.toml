@@ -59,9 +59,9 @@ dev = [
 driftguard = "driftguard.cli.main:cli"
 
 [project.urls]
-Homepage = "https://github.com/KikuAI-Lab/DriftGuard"
-Documentation = "https://github.com/KikuAI-Lab/DriftGuard#readme"
-Repository = "https://github.com/KikuAI-Lab/DriftGuard"
+Homepage = "https://github.com/kiku-jw/DriftGuard"
+Documentation = "https://github.com/kiku-jw/DriftGuard#readme"
+Repository = "https://github.com/kiku-jw/DriftGuard"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/driftguard"]

@@ -18,7 +18,7 @@ Please be respectful and constructive in all interactions. We're building someth
 
 ```bash
 # Clone the repository
-git clone https://github.com/driftguard/agent.git
+git clone https://github.com/kiku-jw/DriftGuard.git
 cd agent
 
 # Create virtual environment
