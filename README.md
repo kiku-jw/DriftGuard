@@ -1,6 +1,7 @@
 # DriftGuard Agent
 
-> Maintenance mode: preserved as a public reference for data drift monitoring ideas and implementation patterns.
+DriftGuard is maintained as an issue-driven data drift monitoring
+implementation and reusable reference.
 
 **Automated data quality & drift detection.** Watches incoming data streams, detects anomalies, unexpected spikes, missing values, and schema drift. Ideal for marketplaces, analytics dashboards, financial data, and event pipelines.
 
