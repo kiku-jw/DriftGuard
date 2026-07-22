@@ -1,11 +1,13 @@
 """Tests for configuration loading and validation."""
 
+from pathlib import Path
 
 import pytest
 
 from driftguard.config import (
     DriftGuardConfig,
     SourceConfig,
+    find_config_file,
     generate_example_config,
     load_config,
     mask_secrets,
@@ -115,6 +117,28 @@ sources:
     def test_load_nonexistent_file(self, tmp_path):
         with pytest.raises(FileNotFoundError):
             load_config(tmp_path / "nonexistent.yaml")
+
+    def test_load_empty_config_raises(self, tmp_path):
+        config_file = tmp_path / "driftguard.yaml"
+        config_file.write_text("")
+
+        with pytest.raises(ValueError, match="Config file is empty"):
+            load_config(config_file)
+
+
+class TestFindConfigFile:
+    def test_returns_first_existing_standard_path(self, monkeypatch, tmp_path):
+        monkeypatch.chdir(tmp_path)
+        (tmp_path / "driftguard.yml").write_text("version: '1'\n")
+
+        result = find_config_file()
+
+        assert result == Path("./driftguard.yml")
+
+    def test_returns_none_when_no_standard_path_exists(self, monkeypatch):
+        monkeypatch.setattr("driftguard.config.Path.exists", lambda path: False)
+
+        assert find_config_file() is None
 
 
 class TestGenerateExampleConfig:
