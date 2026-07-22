@@ -2,8 +2,11 @@
 
 from datetime import datetime, timedelta, timezone
 
+import pytest
+
 from driftguard.models import (
     AlertState,
+    BaselineSummary,
     CollectStatus,
     DataSnapshot,
     Decision,
@@ -49,6 +52,16 @@ class TestDataSnapshot:
         )
 
         assert snapshot.latest_timestamp == datetime(2024, 1, 15, 10, 0, 0, tzinfo=timezone.utc)
+
+    def test_latest_timestamp_returns_none_for_invalid_string(self):
+        snapshot = DataSnapshot(
+            source_name="test",
+            collected_at=datetime.now(timezone.utc),
+            collect_status=CollectStatus.SUCCESS,
+            metrics={"latest_timestamp": "not-a-timestamp"},
+        )
+
+        assert snapshot.latest_timestamp is None
 
 
 class TestDecision:
@@ -108,6 +121,44 @@ class TestDecision:
         )
 
         assert decision1.reason_hash != decision2.reason_hash
+
+    def test_to_dict_includes_confidence_and_reasons(self):
+        decision = Decision(
+            status=DecisionStatus.WARNING,
+            reasons=[Reason(code="NO_NEW_DATA", message="No new rows found")],
+            metrics={},
+            baseline_summary=None,
+            confidence=0.6,
+        )
+
+        assert decision.to_dict() == {
+            "status": "WARNING",
+            "reasons": [{"code": "NO_NEW_DATA", "message": "No new rows found"}],
+            "confidence": 0.6,
+        }
+
+
+class TestBaselineSummary:
+    def test_to_dict_exposes_baseline_metrics(self):
+        summary = BaselineSummary(
+            snapshot_count=5,
+            row_count_median=100.0,
+            row_count_min=90.0,
+            row_count_max=110.0,
+            row_count_stddev=5.0,
+            expected_interval_seconds=3600.0,
+            oldest_snapshot_at=None,
+            newest_snapshot_at=None,
+        )
+
+        assert summary.to_dict() == {
+            "snapshot_count": 5,
+            "row_count_median": 100.0,
+            "row_count_min": 90.0,
+            "row_count_max": 110.0,
+            "row_count_stddev": 5.0,
+            "expected_interval_seconds": 3600.0,
+        }
 
 
 class TestAlertState:
@@ -206,3 +257,7 @@ class TestWebhookPayload:
         assert data["event_type"] == "anomaly"
         assert data["source"]["name"] == "test"
         assert data["metrics"]["row_count"] == 100
+
+    def test_serialize_value_raises_for_unsupported_type(self):
+        with pytest.raises(TypeError, match="not JSON serializable"):
+            WebhookPayload._serialize_value(object())
